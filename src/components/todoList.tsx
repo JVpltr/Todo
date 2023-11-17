@@ -17,20 +17,26 @@ export const TodoList = () => {
     const [items, setItems] = useLocalStorage('todoAppItemsList', []);
     const [itemFilter, setItemFilter] = useState(EItemFilter.ALL);
 
-    const handleItemToggleCheck = (itemToToggle) => {
-        setItems((items) => items.map((item) =>
+    const handleItemToggleCheck = (itemToToggle: TTodoItem) => {
+        setItems((items:TTodoItem[]) => items.map((item) =>
             item.id === itemToToggle.id ? {...item , done: !item.done} : item
         ));
     }
 
-    const handleDeleteItem = (itemToDelete) => {
-        setItems((items) => items.filter(({id})=> id !== itemToDelete.id))
+    const handleDeleteItem = (itemToDelete: TTodoItem) => {
+        setItems((items:TTodoItem[]) => items.filter(({id})=> id !== itemToDelete.id))
     }
     const addItemToList = (newItem: { text:string, done:boolean }) => {
-        crypto.randomUUID();
-        setItems((items) => [...items, {id: crypto.randomUUID(), text: newItem.text, done: newItem.done}])
+        if(newItem.text) {
+            crypto.randomUUID();
+            setItems((items: TTodoItem[]) => [...items, {
+                id: crypto.randomUUID(),
+                text: newItem.text,
+                done: newItem.done
+            }])
+        }
     }
-    const handleKeyUp = (event) => {
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             addItemToList(newTodo);
             setNewTodo({text:'', done: false});
@@ -39,13 +45,13 @@ export const TodoList = () => {
 
     const nbItemNotDone = () => {
         let totalNotDone = 0;
-        items.forEach((item) => {if(!item.done) totalNotDone += 1; });
+        items.forEach((item:TTodoItem) => {if(!item.done) totalNotDone += 1; });
 
         return `${totalNotDone} ${totalNotDone > 1 ? 'items left': 'item left'}`
     }
 
     const handleClearCompleteItem= () => {
-        setItems((items) => items.filter(({done})=> !done))
+        setItems((items:TTodoItem[]) => items.filter(({done})=> !done))
     }
 
     return (
@@ -54,19 +60,19 @@ export const TodoList = () => {
                 <div className={'todoItem'}>
                     <div className={'todoCheck'}>
                         <input id={'newItemCheck'} type={"checkbox"} checked={newTodo.done} onChange={() => setNewTodo(newTodoItem => {return{ ...newTodoItem, done:!newTodoItem.done}})}/>
-                        <span className="checkmark"></span>
-                        <input placeholder={'To do.....'} value={newTodo.text} onChange={event => setNewTodo(newTodoItem => {return{ ...newTodoItem, text:event.target.value}})} onKeyUp={handleKeyUp} />
+                        <span className="checkmark" onClick={() => setNewTodo(newTodoItem => {return{ ...newTodoItem, done:!newTodoItem.done}})}></span>
+                        <input placeholder={'To do.....'} value={newTodo.text} onChange={event => setNewTodo(newTodoItem => {return{ ...newTodoItem, text:event.target.value}})} onKeyUp={(e) =>handleKeyUp(e)} />
                     </div>
                     <button onClick={() => {addItemToList(newTodo); setNewTodo({text:'', done:false})}}>+</button>
                 </div>
             </div>
             <div className={'container'}>
                 <ul>
-                    { items.filter((item)=> {
+                    { items.filter((item:TTodoItem)=> {
                         if(itemFilter === EItemFilter.COMPLETE) return item.done;
                         if(itemFilter === EItemFilter.ACTIVE) return !item.done;
                         return true
-                    }).map((item) => {
+                    }).map((item:TTodoItem) => {
                         return (
                         <li key={item.id}>
                             <TodoItem item={item}

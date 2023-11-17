@@ -1,9 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
+:root {
+  --bg-image: url("assets/bg-desktop-dark.jpg");
+}
+@media screen and (max-width:480px) {
+  :root {
+    --bg-image: url("assets/bg-mobile-dark.jpg");
+  }
+}
 
 body {
   margin: 0;
   background-color: #171823;
-  background-image: url("assets/bg-desktop-dark.jpg");
+  background-image: var(--bg-image);
   background-position: top;
   background-repeat: no-repeat;
   background-size: 100% auto;
@@ -31,7 +39,7 @@ ul{
   list-style: none;
 }
 .app {
-  width: 34rem;
+  width: min(34rem, calc(100vw - 2rem));
   display: grid;
   gap: 1rem;
 }
@@ -88,6 +96,9 @@ ul{
   justify-content: space-between;
   padding: 1.25rem;
   color: #C8CBE7;
+
+}
+ul .todoItem{
   border-bottom: solid 1px #393A4B;
 }
 .todoCheck{
@@ -106,14 +117,14 @@ input[type='checkbox']{
   width: 0;
 }
 .todoCheck:hover input ~ .checkmark {
-  background-color: #ccc;
+  background: linear-gradient(135deg,#55DDFF, #C058F3);
 }
 
 .checkmark {
   align-self: start;
   aspect-ratio: 1;
   height: 20px;
-  background-color: #eee;
+  border: solid 1px #ccc;
   border-radius: 100%;
 }
 input:checked ~ .checkmark {

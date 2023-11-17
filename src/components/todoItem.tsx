@@ -7,7 +7,7 @@ type TTodoItemProps = {
 export const TodoItem = ({item, onItemToggleCheck, onItemDeletion}: TTodoItemProps) => {
     return(
         <div className={'todoItem'}>
-            <div className={'todoCheck'}>
+            <div className={'todoCheck'} onClick={() => onItemToggleCheck(item)}>
                 <input id={`itemCheck-${item.id}`} type={"checkbox"} checked={item.done} onChange={() => onItemToggleCheck(item)}/>
                 <span className="checkmark"></span>
                 <label htmlFor={`itemCheck-${item.id}`}>{item.text}</label>
